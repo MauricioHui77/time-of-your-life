@@ -37,7 +37,7 @@ function Clock(props) {
     <div id="Clock">
       <div id="Digits" style={displayStyle}>
         <div id="title" style={titleStyle}>
-          The Time of Your Life
+          {props.clockProps.clockTitle}
         </div>
         <div id="time" style={clockStyle}>
           {displayText}

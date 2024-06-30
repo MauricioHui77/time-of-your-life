@@ -8,6 +8,7 @@ function SetClockProps(props) {
   const [blinkColons, setBlinkColons] = useState(clockProps.blinkColons)
   const [presets, setPresets] = useState([])
   const [loading, setLoading] = useState(true)
+  const [clockTitle, setClockTitle] = useState(clockProps.clockTitle)
 
   useEffect(() => {
     ;(async () => {
@@ -25,6 +26,7 @@ function SetClockProps(props) {
     props.clockFontSize = document.getElementById('clockFontSize').value
     props.fontColor = document.getElementById('fontColor').value
     props.blinkColons = document.getElementById('blinkColons').checked
+    props.clockTitle = document.getElementById('clockTitle').value
     return props
   }
 
@@ -57,6 +59,11 @@ function SetClockProps(props) {
     setBlinkColons(document.getElementById('blinkColons').checked)
     clockProps.blinkColons = document.getElementById('blinkColons').checked
     setClockProps()
+  }
+
+  const setClockTitleUI = () => {
+    setClockTitle(document.getElementById('clockTitle').value)
+    clockProps.fontFamily = document.getElementById('clockTitle').value
   }
 
   const presetsDisplay = (() => {
@@ -107,6 +114,17 @@ function SetClockProps(props) {
         <div>
           <div>
             <h2>Settings</h2>
+          </div>
+          <div>
+            <div>Clock Title</div>
+            <div>
+              <input
+                id="clockTitle"
+                value={clockTitle}
+                onChange={setClockTitleUI}
+              />
+              <button onClick={setClockProps}>✓</button>
+            </div>
           </div>
           <div>
             <div>Font Family</div>
