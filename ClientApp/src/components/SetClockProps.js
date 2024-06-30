@@ -9,9 +9,14 @@ function SetClockProps(props) {
   const [presets, setPresets] = useState([])
   const [loading, setLoading] = useState(true)
   const [clockTitle, setClockTitle] = useState(clockProps.clockTitle)
+  const [errors, setErrors] = useState({
+    clockTitle: '',
+    fontFamily: '',
+    fontColor: ''
+  });
 
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       const response = await fetch('clock/presets')
       const data = await response.json()
       setPresets(data)
@@ -31,8 +36,20 @@ function SetClockProps(props) {
   }
 
   const setClockProps = () => {
-    const setProps = getProps()
-    props.setClockProps(setProps)
+    const validateErrors = {
+      clockTitle: validateTextInput('clockTitle', clockTitle),
+      fontFamily: validateTextInput('fontFamily', fontFamily),
+      fontColor: validateTextInput('fontColor', fontColor)
+    };
+
+    setErrors(validateErrors);
+
+    const isValid = Object.values(validateErrors).every((error) => error === '');
+
+    if (isValid) {
+      const setProps = getProps()
+      props.setClockProps(setProps)
+    }
   }
 
   const handleKeyDown = (e) => {
@@ -40,6 +57,17 @@ function SetClockProps(props) {
     if (e.key === 'Enter') {
       setClockProps();
     }
+  };
+
+  const validateTextInput = (id, value) => {
+    if (value.trim() === '') {
+      return 'This field cannot be empty.';
+    }
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/g;
+    if (specialCharRegex.test(value)) {
+      return 'This field cannot contain special characters.';
+    }
+    return '';
   };
 
   const fontSizeOptions = (selctedSize) => {
@@ -91,6 +119,10 @@ function SetClockProps(props) {
     )
   })()
 
+  let errorStyle = {
+    color: 'red'
+  }
+
   return (
     <div id="ClockProps" style={{ overflow: 'auto' }}>
       <div
@@ -133,6 +165,7 @@ function SetClockProps(props) {
               />
               <button onClick={setClockProps}>✓</button>
             </div>
+            {errors.clockTitle && <div style={errorStyle}>{errors.clockTitle}</div>}
           </div>
           <div>
             <div>Font Family</div>
@@ -145,6 +178,7 @@ function SetClockProps(props) {
               />
               <button onClick={setClockProps}>✓</button>
             </div>
+            {errors.fontFamily && <div style={errorStyle}>{errors.fontFamily}</div>}
           </div>
           <div>
             <div>Title Font Size</div>
@@ -173,6 +207,7 @@ function SetClockProps(props) {
               />
               <button onClick={setClockProps}>✓</button>
             </div>
+            {errors.fontColor && <div style={errorStyle}>{errors.fontColor}</div>}
           </div>
           <div>
             <div>Blink Colons</div>
