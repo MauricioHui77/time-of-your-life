@@ -8,7 +8,7 @@ namespace time.Controllers;
 [Route("[controller]")]
 public class ClockController : ControllerBase
 {
-    private static List<ClockProps> _presets = new List<ClockProps>(){ new() };
+    private static List<ClockProps> _presets = new List<ClockProps>() { new() };
 
     private readonly ILogger<ClockController> _logger;
 
@@ -24,9 +24,13 @@ public class ClockController : ControllerBase
     }
 
     [HttpPost("presets")]
-    public ClockProps AddPreset([FromBody]ClockProps preset)
+    public IActionResult AddPreset([FromBody] ClockProps preset)
     {
-        _presets.Add(preset);
-        return preset;
+        if (ModelState.IsValid)
+        {
+            _presets.Add(preset);
+            return Ok(preset);
+        }
+        return BadRequest(ModelState);
     }
 }
