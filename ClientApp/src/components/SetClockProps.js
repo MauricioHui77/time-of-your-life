@@ -35,6 +35,13 @@ function SetClockProps(props) {
     props.setClockProps(setProps)
   }
 
+  const handleKeyDown = (e) => {
+    // Validation for Return character
+    if (e.key === 'Enter') {
+      setClockProps();
+    }
+  };
+
   const fontSizeOptions = (selctedSize) => {
     return clockProps.availableFontSizes.map((size) => {
       var option = <option>{size}</option>
@@ -122,6 +129,7 @@ function SetClockProps(props) {
                 id="clockTitle"
                 value={clockTitle}
                 onChange={setClockTitleUI}
+                onKeyDown={handleKeyDown}
               />
               <button onClick={setClockProps}>✓</button>
             </div>
@@ -133,6 +141,7 @@ function SetClockProps(props) {
                 id="fontFamily"
                 value={fontFamily}
                 onChange={setFontFamilyUI}
+                onKeyDown={handleKeyDown}
               />
               <button onClick={setClockProps}>✓</button>
             </div>
@@ -160,6 +169,7 @@ function SetClockProps(props) {
                 id="fontColor"
                 value={fontColor}
                 onChange={(e) => setFontColurUI(e)}
+                onKeyDown={handleKeyDown}
               />
               <button onClick={setClockProps}>✓</button>
             </div>
