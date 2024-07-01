@@ -22,7 +22,12 @@ function SetClockProps(props) {
 
   useEffect(() => {
     ; (async () => {
-      const response = await fetch('clock/presets')
+      const response = await fetch('clock/presets', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
       const data = await response.json()
       setPresets(data)
       setLoading(false)
@@ -74,6 +79,25 @@ function SetClockProps(props) {
   const handleClockSizeSliderChange = (e) => {
     setClockFontSize(parseInt(e.target.value));
     setClockProps();
+  };
+  
+  const handleSavePreset = async () => {
+    try {
+      const response = await fetch('clock/presets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(clockProps)
+      });
+      if (!response.ok) {
+        throw new Error('Something went wrong.');
+      }
+      const result = await response.json();
+      console.log('Preset saved successfully:', result);
+    } catch (error) {
+      console.error('Error saving preset:', error);
+    }
   };
 
   const validateTextInput = (id, value) => {
@@ -275,10 +299,7 @@ function SetClockProps(props) {
           <div>
             <div>
               <button
-                onClick={() =>
-                  alert('This should save the preset to the sever.')
-                }
-              >
+                onClick={handleSavePreset}>
                 Save Preset
               </button>
             </div>

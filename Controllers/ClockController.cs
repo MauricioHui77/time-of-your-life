@@ -24,19 +24,19 @@ public class ClockController : ControllerBase
     }
 
     [HttpPost("presets")]
-    public IActionResult AddPreset([FromBody] ClockProps preset)
+    public IActionResult AddPreset([FromBody] ClockProps clockProps)
     {
         if (ModelState.IsValid)
         {
-            var existingPreset = _presets.FirstOrDefault(x => x.ClockTitle.Equals(preset.ClockTitle, StringComparison.OrdinalIgnoreCase));
+            var existingPreset = _presets.FirstOrDefault(x => x.ClockTitle.Equals(clockProps.ClockTitle, StringComparison.OrdinalIgnoreCase));
             if (existingPreset != null)
             {
-                return Conflict($"A preset with the title '{preset.ClockTitle}' already exists.");
+                return Conflict($"A preset with the title '{clockProps.ClockTitle}' already exists.");
             }
 
-            preset.PresetId = Guid.NewGuid();
-            _presets.Add(preset);
-            return Ok(preset);
+            clockProps.PresetId = Guid.NewGuid();
+            _presets.Add(clockProps);
+            return Ok(clockProps);
         }
         return BadRequest(ModelState);
     }
