@@ -28,9 +28,34 @@ public class ClockController : ControllerBase
     {
         if (ModelState.IsValid)
         {
+            var existingPreset = _presets.FirstOrDefault(x => x.ClockTitle.Equals(preset.ClockTitle, StringComparison.OrdinalIgnoreCase));
+            if (existingPreset != null)
+            {
+                return Conflict($"A preset with the title '{preset.ClockTitle}' already exists.");
+            }
+
+            preset.PresetId = Guid.NewGuid();
             _presets.Add(preset);
             return Ok(preset);
         }
         return BadRequest(ModelState);
+    }
+
+    [HttpGet("presets/searchByTitleId")]
+    public ActionResult<IEnumerable<ClockProps>> GetPresetsByTitleId([FromQuery] string titleId)
+    {
+        if (string.IsNullOrEmpty(titleId))
+        {
+            return BadRequest("The Title is required.");
+        }
+
+        var presetsFound = _presets.Where(x => x.ClockTitle.Contains(titleId, StringComparison.OrdinalIgnoreCase)).ToArray();
+
+        if (!presetsFound.Any())
+        {
+            return NotFound("No presets were found with the title provided.");
+        }
+
+        return Ok(presetsFound);
     }
 }
