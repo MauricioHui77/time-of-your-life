@@ -5,7 +5,8 @@ export default class ClockProps {
     this.titleFontSize = 64
     this.clockFontSize = 48
     this.blinkColons = true
-    this.fontColor = 'black'
+    this.titleFontColor = 'black'
+    this.clockFontColor = 'black'
     this.clockTitle = 'The Time of Your Life'
   }
 }
