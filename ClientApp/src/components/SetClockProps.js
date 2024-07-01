@@ -12,11 +12,13 @@ function SetClockProps(props) {
   const [errors, setErrors] = useState({
     clockTitle: '',
     fontFamily: '',
-    fontColor: ''
+    titleFontColor: '',
+    clockFontColor: ''
   });
   const [titleFontSize, setTitleFontSize] = useState(clockProps.titleFontSize)
   const [clockFontSize, setClockFontSize] = useState(clockProps.clockFontSize)
   const [clockFontColor, setClockFontColor] = useState(clockProps.clockFontColor)
+  const [isExpanded, setIsExpanded] = useState(true);
 
   useEffect(() => {
     ; (async () => {
@@ -117,6 +119,10 @@ function SetClockProps(props) {
     clockProps.fontFamily = document.getElementById('clockTitle').value
   }
 
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   const presetsDisplay = (() => {
     console.log(presets)
     return loading ? (
@@ -152,20 +158,17 @@ function SetClockProps(props) {
       >
         <a
           style={{ cursor: 'pointer' }}
-          onClick={() =>
-            alert(
-              'This the button that would expand or collapse the settings panel.'
-            )
-          }
+          onClick={toggleExpand}
         >
-          +/-
+          {isExpanded ? '-' : '+'}
         </a>
       </div>
       <div>
-        <div>
-          <h1>Clock Properties</h1>
-          <hr />
-        </div>
+        <h1>Clock Properties</h1>
+        <hr />
+      </div>
+      {isExpanded && (<div>
+
         <div>
           <div>
             <h2>Settings</h2>
@@ -218,19 +221,19 @@ function SetClockProps(props) {
           <div>
             <div>Clock Font Size</div>
             <input
-                type="range"
-                id="clockFontSize"
-                min={Math.min(...clockProps.availableFontSizes)}
-                max={Math.max(...clockProps.availableFontSizes)}
-                step={1}
-                value={clockFontSize}
-                onChange={handleClockSizeSliderChange}
-                list="slidermarks"
-              />
-              <datalist id="slidermarks">
-                {fontSizeOptions()}
-              </datalist>
-              <div>{clockFontSize}</div>
+              type="range"
+              id="clockFontSize"
+              min={Math.min(...clockProps.availableFontSizes)}
+              max={Math.max(...clockProps.availableFontSizes)}
+              step={1}
+              value={clockFontSize}
+              onChange={handleClockSizeSliderChange}
+              list="slidermarks"
+            />
+            <datalist id="slidermarks">
+              {fontSizeOptions()}
+            </datalist>
+            <div>{clockFontSize}</div>
           </div>
           <div>
             <div>Title Font Color</div>
@@ -287,6 +290,7 @@ function SetClockProps(props) {
           <div>{presetsDisplay}</div>
         </div>
       </div>
+      )}
     </div>
   )
 }
