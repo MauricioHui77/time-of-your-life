@@ -14,6 +14,8 @@ function SetClockProps(props) {
     fontFamily: '',
     fontColor: ''
   });
+  const [titleFontSize, setTitleFontSize] = useState(clockProps.titleFontSize)
+  const [clockFontSize, setClockFontSize] = useState(clockProps.clockFontSize)
 
   useEffect(() => {
     ; (async () => {
@@ -59,6 +61,16 @@ function SetClockProps(props) {
     }
   };
 
+  const handleTitleSizeSliderChange = (e) => {
+    setTitleFontSize(parseInt(e.target.value));
+    setClockProps();
+  };
+
+  const handleClockSizeSliderChange = (e) => {
+    setClockFontSize(parseInt(e.target.value));
+    setClockProps();
+  };
+
   const validateTextInput = (id, value) => {
     if (value.trim() === '') {
       return 'This field cannot be empty.';
@@ -70,14 +82,10 @@ function SetClockProps(props) {
     return '';
   };
 
-  const fontSizeOptions = (selctedSize) => {
-    return clockProps.availableFontSizes.map((size) => {
-      var option = <option>{size}</option>
-      if (size === selctedSize) {
-        option = <option selected>{size}</option>
-      }
-      return option
-    })
+  const fontSizeOptions = () => {
+    return clockProps.availableFontSizes.map((size) => (
+      <option key={size} value={size} />
+    ));
   }
 
   const setFontFamilyUI = () => {
@@ -183,18 +191,38 @@ function SetClockProps(props) {
           <div>
             <div>Title Font Size</div>
             <div>
-              <select id="titleFontSize" onChange={setClockProps}>
-                {fontSizeOptions(clockProps.titleFontSize)}
-              </select>
+              <input
+                type="range"
+                id="titleFontSize"
+                min={Math.min(...clockProps.availableFontSizes)}
+                max={Math.max(...clockProps.availableFontSizes)}
+                step={1}
+                value={titleFontSize}
+                onChange={handleTitleSizeSliderChange}
+                list="slidermarks"
+              />
+              <datalist id="slidermarks">
+                {fontSizeOptions()}
+              </datalist>
+              <div>{titleFontSize}</div>
             </div>
           </div>
           <div>
             <div>Clock Font Size</div>
-            <div>
-              <select id="clockFontSize" onChange={setClockProps}>
-                {fontSizeOptions(clockProps.clockFontSize)}
-              </select>
-            </div>
+            <input
+                type="range"
+                id="clockFontSize"
+                min={Math.min(...clockProps.availableFontSizes)}
+                max={Math.max(...clockProps.availableFontSizes)}
+                step={1}
+                value={clockFontSize}
+                onChange={handleClockSizeSliderChange}
+                list="slidermarks"
+              />
+              <datalist id="slidermarks">
+                {fontSizeOptions()}
+              </datalist>
+              <div>{clockFontSize}</div>
           </div>
           <div>
             <div>Font Color</div>
